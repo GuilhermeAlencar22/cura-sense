@@ -1,0 +1,29 @@
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.desvioOk {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #065f46;
+  font-variant-numeric: tabular-nums;
+}
+
+.desvioLeve {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #92400e;
+  font-variant-numeric: tabular-nums;
+}
+
+.desvioCritico {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #991b1b;
+  font-variant-numeric: tabular-nums;
+}

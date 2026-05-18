@@ -1,61 +1,95 @@
-export type TipoConcreto =
-  | "convencional"
-  | "armado"
-  | "usinado"
-  | "bombeavel"
-  | "protendido"
-  | "alta_resistencia"
-  | "leve"
-  | "autoadensavel";
+// Tipos de peça produzida pela cliente (concreto decorativo UHPC)
+export type TipoPeca =
+  | "cuba_colorida"
+  | "escalda_pes"
+  | "pia_gourmet"
+  | "bancada"
+  | "vaso"
+  | "outro";
 
-export type TipoPeca = "pia" | "vaso" | "bancada" | "pilar" | "laje" | "outro";
+// Apenas UHPC é o foco do sistema; outros tipos ficam disponíveis para expansão
+export type TipoConcreto = "uhpc" | "convencional" | "armado" | "alta_resistencia";
 
-export type StatusCura = "ativa" | "pausada" | "finalizada" | "alerta";
+export type StatusCura = "em_cura" | "finalizada" | "alerta" | "cancelada";
 
-// Receita: template reutilizável definido pelo usuário
-export type Receita = {
+export type StatusConformidade = "conforme" | "desvio_leve" | "desvio_critico";
+
+// Receita: template reutilizável de traço para uma peça específica
+export type ReceitaTraco = {
   id: string;
   nome: string;
   tipoPeca: TipoPeca;
   tipoConcreto: TipoConcreto;
-  volumeM3: number;
-  objetivoFinal: string;
+  // Dosagem padrão (em gramas)
+  massaCimento: number;
+  massaAgregado: number;
+  massaPigmento: number;
+  massaAditivos: number;
+  massaAgua: number;
+  // Relações calculadas (armazenadas para consulta rápida)
+  relacaoAguaCimento: number;
+  relacaoMassaAgregado: number;
+  // Cura
   diasCura: number;
-  aguaBaseMl: number;
-  vazaoBombaMlSegundo: number;
+  ambienteCura: "tanque_submerso" | "camara_umida" | "exposto";
+  observacoes: string;
   criadaEm: string;
 };
 
-// Cura: instância de uma receita em execução
-export type Cura = {
+// Lote: registro de uma produção real usando uma receita
+export type LoteProducao = {
   id: string;
   receitaId: string;
   nomeIdentificacao: string;
+  quantidadePecas: number;
+  // Dosagem real usada (em gramas)
+  massaCimentoReal: number;
+  massaAgregadoReal: number;
+  massaPigmentoReal: number;
+  massaAditivosReal: number;
+  massaAguaReal: number;
+  // Relações reais calculadas
+  relacaoAguaCimentoReal: number;
+  relacaoMassaAgregadoReal: number;
+  // Conformidade comparada com a receita padrão
+  conformidade: StatusConformidade;
+  desvioPercentualAC: number;
+  desvioPercentualMA: number;
+  observacoes: string;
+  criadoEm: string;
+};
+
+// Cura: acompanhamento do lote durante os dias de cura
+export type CuraLote = {
+  id: string;
+  loteId: string;
+  receitaId: string;
   inicioCura: string;
+  previsaoFim: string;
   status: StatusCura;
-  temperaturaAtual: number;
-  umidadeAtual: number;
-  aguaTotalUsadaMl: number;
+  temperaturaTanque: number | null;
+  temperaturaAmbiente: number | null;
+  nivelAguaTanque: "ok" | "baixo" | "critico" | null;
   historico: LeituraSensor[];
 };
 
+// Leitura periódica vinda do ESP32 (ou simulada na Fase 1)
 export type LeituraSensor = {
   id: string;
   curaId: string;
-  temperatura: number;
-  umidade: number;
-  aguaAplicadaMl: number;
-  bombaAcionada: boolean;
+  temperaturaTanque: number | null;
+  temperaturaAmbiente: number | null;
+  nivelAguaTanque: "ok" | "baixo" | "critico" | null;
   dataHora: string;
 };
 
-export type ResultadoCalculo = {
-  aguaPorCicloMl: number;
-  fatorUmidade: number;
-  fatorTemperatura: number;
-  classificacaoUmidade: "alta" | "media" | "baixa";
-  classificacaoTemperatura: "alta" | "media" | "baixa";
-  tempoBombaSegundos: number;
+// Resultado do cálculo de relações de traço
+export type ResultadoRelacoes = {
+  relacaoAguaCimento: number;
+  relacaoMassaAgregado: number;
+  desvioPercentualAC: number;
+  desvioPercentualMA: number;
+  conformidade: StatusConformidade;
 };
 
 export type Usuario = {

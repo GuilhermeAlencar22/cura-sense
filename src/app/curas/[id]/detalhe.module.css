@@ -1,5 +1,4 @@
-.back { margin-bottom: 20px; }
-
+/* ── Cabeçalho ───────────────────────────────────────────────────────────── */
 .topRow {
   display: flex;
   align-items: flex-start;
@@ -9,6 +8,18 @@
   margin-bottom: 20px;
 }
 
+.topLeft {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.topLeft > button {
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
 .titleRow {
   display: flex;
   align-items: center;
@@ -16,64 +27,166 @@
   flex-wrap: wrap;
 }
 
-.receitaLabel {
+.subtitulo {
   font-size: 0.8125rem;
   color: var(--color-text-secondary);
   margin-top: 4px;
 }
 
-.progressCard {
+.topActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+/* ── Alertas de sensor ───────────────────────────────────────────────────── */
+.alertasWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.alertaBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--color-danger-light);
+  border: 1.5px solid var(--color-danger);
+  border-radius: var(--radius-md);
+  font-size: 1.25rem;
+}
+
+.alertaBannerWarn {
+  background: var(--color-warning-light);
+  border-color: var(--color-warning);
+}
+
+.alertaTitulo {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #991b1b;
+  margin-bottom: 2px;
+}
+
+.alertaBannerWarn .alertaTitulo { color: #92400e; }
+
+.alertaDesc {
+  font-size: 0.8125rem;
+  color: #7f1d1d;
+  line-height: 1.5;
+}
+
+.alertaBannerWarn .alertaDesc { color: #78350f; }
+
+/* ── Card 1: Status da Cura ─────────────────────────────────────────────── */
+.statusCard {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 18px 22px;
-  margin-bottom: 24px;
+  border-radius: var(--radius-lg);
+  padding: 22px 24px;
+  margin-bottom: 20px;
   box-shadow: var(--shadow-sm);
 }
 
-.progressHeader {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.8125rem;
-  color: var(--color-text-secondary);
-  margin-bottom: 10px;
+.statusMeta {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 14px 20px;
+  margin-bottom: 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--color-border-light);
 }
 
-.progressBar {
-  height: 8px;
+.statusItem {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.statusItem span {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.statusItem strong {
+  font-size: 0.9375rem;
+  color: var(--color-text-primary);
+}
+
+.diasZero { color: var(--color-danger) !important; }
+
+/* Barra de progresso */
+.progressoWrap {}
+
+.progressoHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 8px;
+}
+
+.progressoPct {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.progressoBar {
+  height: 10px;
   background: var(--color-border);
   border-radius: 99px;
   overflow: hidden;
 }
 
-.progressFill {
+.progressoFill {
   height: 100%;
   background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
   border-radius: 99px;
-  transition: width 0.5s ease;
+  transition: width 0.6s ease;
 }
 
-.objetivo {
+.progressoFinalizado {
+  background: linear-gradient(90deg, var(--color-accent), #059669);
+}
+
+.progressoAlerta {
+  background: linear-gradient(90deg, var(--color-warning), var(--color-danger));
+}
+
+.progressoLabel {
   font-size: 0.8125rem;
-  color: var(--color-text-muted);
-  margin-top: 10px;
-  font-style: italic;
+  color: var(--color-accent);
+  margin-top: 8px;
+  font-weight: 500;
 }
 
+.progressoLabelCancelado { color: var(--color-danger); }
+
+/* ── Grid cards ──────────────────────────────────────────────────────────── */
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
+  margin-bottom: 20px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 860px) {
   .grid { grid-template-columns: 1fr; }
 }
 
+/* ── Card base ───────────────────────────────────────────────────────────── */
 .card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   padding: 24px;
   box-shadow: var(--shadow-sm);
 }
@@ -87,37 +200,72 @@
   margin-bottom: 18px;
 }
 
-.sensorRow {
+/* ── Card 2: Dados do Lote ───────────────────────────────────────────────── */
+.paramList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.paramRowEl {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.paramRowEl:last-child { border-bottom: none; }
+
+.paramRowEl strong {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+/* ── Card 3: Sensores ────────────────────────────────────────────────────── */
+.sensoresGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 18px;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .sensorBox {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  align-items: flex-start;
+  gap: 10px;
   padding: 14px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   background: var(--color-bg);
   border: 1px solid var(--color-border-light);
-  font-size: 1.375rem;
+  transition: background var(--transition), border-color var(--transition);
 }
 
-.sensorBox.danger {
+.sensorDanger {
   background: var(--color-danger-light);
   border-color: #fecaca;
 }
 
-.sensorBox.warning {
+.sensorWarning {
   background: var(--color-warning-light);
   border-color: #fde68a;
 }
 
+.sensorIcone {
+  font-size: 1.375rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
 .sensorLabel {
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   color: var(--color-text-muted);
+  margin-bottom: 3px;
 }
 
 .sensorVal {
@@ -125,37 +273,214 @@
   font-weight: 700;
   color: var(--color-text-primary);
   line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.sensorValSm {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.3;
   margin-top: 2px;
 }
 
-.btnGroup {
-  display: flex;
-  flex-wrap: wrap;
+.sensorValDanger { color: var(--color-danger); }
+.sensorValWarn   { color: #92400e; }
+
+.sensorAlerta {
+  font-size: 0.6875rem;
+  color: var(--color-danger);
+  font-weight: 600;
+  margin-top: 3px;
+}
+
+/* Botões de simulação */
+.simBtns {
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border-light);
+}
+
+.simTitulo {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-bottom: 10px;
+}
+
+.simGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 8px;
 }
 
-.paramList {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+/* ── Card 4: Linha do Tempo ──────────────────────────────────────────────── */
+.timelineCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 20px;
 }
 
-.paramRow {
+.timelineWrap {
+  position: relative;
+  padding: 24px 0 8px;
+}
+
+.timelineTrilho {
+  position: absolute;
+  top: 36px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--color-border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.timelineProgresso {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  border-radius: 99px;
+  transition: width 0.6s ease;
+}
+
+.timelineFinalizado {
+  background: linear-gradient(90deg, var(--color-accent), #059669);
+}
+
+.timelineAlerta {
+  background: linear-gradient(90deg, var(--color-warning), var(--color-danger));
+}
+
+.timelineMarcos {
   display: flex;
   justify-content: space-between;
+  position: relative;
+}
+
+.marco {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  font-size: 0.875rem;
+  gap: 6px;
+  z-index: 1;
+}
+
+.marcoPonto {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-border);
+  border: 2px solid var(--color-surface);
+  box-shadow: 0 0 0 2px var(--color-border);
+  transition: background var(--transition), box-shadow var(--transition);
+}
+
+.marcoPassado {
+  background: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
+}
+
+.marcoAlerta {
+  background: var(--color-warning) !important;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3) !important;
+}
+
+.marcoLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.marcoData {
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+}
+
+.timelineInfo {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border-light);
+}
+
+/* ── Card 5: Histórico ───────────────────────────────────────────────────── */
+.historicoSection { margin-bottom: 32px; }
+
+.historicoHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.historicoCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-border);
   color: var(--color-text-secondary);
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--color-border-light);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 1px 8px;
+  margin-left: 8px;
 }
 
-.paramRow:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
+.tdNum {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  width: 32px;
 }
 
-.destaque {
-  font-size: 1.125rem;
-  color: var(--color-primary);
+.tdDanger { color: var(--color-danger); font-weight: 600; }
+.tdWarn   { color: #92400e; font-weight: 600; }
+
+.tdAlertaTag {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+
+.tdAlertaTagWarn {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  background: var(--color-warning-light);
+  color: #92400e;
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+
+.rowAlerta td { background: #fffbeb !important; }
+
+/* ── Classes de desvio ───────────────────────────────────────────────────── */
+.desvioOk       { color: #065f46; }
+.desvioLeve     { color: #92400e; }
+.desvioCritico  { color: #991b1b; }
+
+.destaqueDanger { color: var(--color-danger); font-weight: 700; }
+
+/* ── Responsivo ──────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .statusMeta { grid-template-columns: 1fr 1fr; }
+  .sensoresGrid { grid-template-columns: 1fr; }
+  .simGrid { grid-template-columns: 1fr; }
+  .timelineInfo { flex-direction: column; gap: 4px; }
+  .topActions { width: 100%; }
+  .topActions .btn { flex: 1; }
 }

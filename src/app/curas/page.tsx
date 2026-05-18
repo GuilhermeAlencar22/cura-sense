@@ -5,14 +5,14 @@ import Link from "next/link";
 import AppShell from "@/components/AppShell";
 import StatusBadge from "@/components/StatusBadge";
 import { listarCuras, excluirCura } from "@/services/curasService";
+import { buscarLote } from "@/services/lotesService";
 import { buscarReceita } from "@/services/receitasService";
-import { calcularAguaPorCiclo } from "@/utils/calcularAguaPorCiclo";
-import { calcularDiasRestantes, calcularProgresso } from "@/utils/formatters";
-import { Cura } from "@/types";
+import { calcularDiasRestantes, calcularProgresso, labelTipoPeca } from "@/utils/formatters";
+import { CuraLote } from "@/types";
 import styles from "./curas.module.css";
 
 export default function CurasPage() {
-  const [curas, setCuras] = useState<Cura[]>([]);
+  const [curas, setCuras] = useState<CuraLote[]>([]);
 
   function recarregar() {
     setCuras(listarCuras());
@@ -23,24 +23,24 @@ export default function CurasPage() {
   }, []);
 
   function handleExcluir(id: string) {
-    if (confirm("Deseja remover esta cura? O histórico de leituras será perdido.")) {
+    if (confirm("Remover esta cura? O histórico de leituras será perdido.")) {
       excluirCura(id);
       recarregar();
     }
   }
 
-  const ativas = curas.filter((c) => c.status !== "finalizada");
-  const finalizadas = curas.filter((c) => c.status === "finalizada");
+  const ativas = curas.filter((c) => c.status === "em_cura" || c.status === "alerta");
+  const finalizadas = curas.filter((c) => c.status === "finalizada" || c.status === "cancelada");
 
   return (
     <AppShell>
       <div className={styles.header}>
         <div>
           <h1 className="page-title">Curas</h1>
-          <p className="page-subtitle">Acompanhe todas as curas em andamento e finalizadas.</p>
+          <p className="page-subtitle">Acompanhe os lotes em cura e os finalizados.</p>
         </div>
-        <Link href="/receitas" className="btn btn-primary">
-          + Iniciar Cura
+        <Link href="/producao/nova" className="btn btn-primary">
+          + Novo Lote
         </Link>
       </div>
 
@@ -48,15 +48,15 @@ export default function CurasPage() {
         <div className="empty-state">
           <span style={{ fontSize: "2.5rem" }}>⟳</span>
           <p>Nenhuma cura iniciada ainda.</p>
-          <Link href="/receitas" className="btn btn-primary" style={{ marginTop: 16, display: "inline-flex" }}>
-            Ir para Receitas para iniciar
+          <Link href="/producao/nova" className="btn btn-primary" style={{ marginTop: 16, display: "inline-flex" }}>
+            Registrar primeiro lote
           </Link>
         </div>
       ) : (
         <>
           {ativas.length > 0 && (
             <>
-              <h2 className="section-title">Ativas ({ativas.length})</h2>
+              <h2 className="section-title">Em cura ({ativas.length})</h2>
               <div className={styles.grid}>
                 {ativas.map((cura) => (
                   <CuraCard key={cura.id} cura={cura} onExcluir={handleExcluir} />
@@ -64,7 +64,6 @@ export default function CurasPage() {
               </div>
             </>
           )}
-
           {finalizadas.length > 0 && (
             <>
               <h2 className="section-title" style={{ marginTop: 32 }}>
@@ -83,32 +82,26 @@ export default function CurasPage() {
   );
 }
 
-function CuraCard({ cura, onExcluir }: { cura: Cura; onExcluir: (id: string) => void }) {
+function CuraCard({ cura, onExcluir }: { cura: CuraLote; onExcluir: (id: string) => void }) {
+  const lote = buscarLote(cura.loteId);
   const receita = buscarReceita(cura.receitaId);
-  const diasRestantes = receita ? calcularDiasRestantes(cura.inicioCura, receita.diasCura) : 0;
+  const diasRestantes = calcularDiasRestantes(cura.previsaoFim);
   const progresso = receita ? calcularProgresso(cura.inicioCura, receita.diasCura) : 0;
-  const calculo = receita
-    ? calcularAguaPorCiclo({
-        aguaBaseMl: receita.aguaBaseMl,
-        vazaoBombaMlSegundo: receita.vazaoBombaMlSegundo,
-        temperatura: cura.temperaturaAtual,
-        umidade: cura.umidadeAtual,
-      })
-    : null;
 
   return (
     <div className={styles.card}>
       <div className={styles.cardHeader}>
         <div>
-          <h3 className={styles.cardTitle}>{cura.nomeIdentificacao}</h3>
+          <h3 className={styles.cardTitle}>{lote?.nomeIdentificacao ?? "Lote"}</h3>
           {receita && (
-            <p className={styles.cardSub}>{receita.nome}</p>
+            <p className={styles.cardSub}>
+              {receita.nome} · {labelTipoPeca(receita.tipoPeca)}
+            </p>
           )}
         </div>
         <StatusBadge status={cura.status} />
       </div>
 
-      {/* Barra de progresso */}
       <div className={styles.progressWrap}>
         <div className={styles.progressBar}>
           <div className={styles.progressFill} style={{ width: `${progresso}%` }} />
@@ -119,27 +112,19 @@ function CuraCard({ cura, onExcluir }: { cura: Cura; onExcluir: (id: string) => 
       <div className={styles.metrics}>
         <div className={styles.metric}>
           <span className={styles.metricIcon}>🌡</span>
-          <span className={`${styles.metricVal} ${cura.temperaturaAtual > 30 ? styles.danger : ""}`}>
-            {cura.temperaturaAtual}°C
+          <span className={styles.metricVal}>
+            {cura.temperaturaTanque != null ? `${cura.temperaturaTanque}°C` : "—"}
           </span>
         </div>
-        <div className={styles.metric}>
-          <span className={styles.metricIcon}>💧</span>
-          <span className={`${styles.metricVal} ${cura.umidadeAtual < 60 ? styles.warning : ""}`}>
-            {cura.umidadeAtual}%
-          </span>
-        </div>
-        {calculo && (
-          <div className={styles.metric}>
-            <span className={styles.metricIcon}>🚿</span>
-            <span className={styles.metricVal}>{calculo.aguaPorCicloMl} ml</span>
-          </div>
-        )}
         <div className={styles.metric}>
           <span className={styles.metricIcon}>⏱</span>
           <span className={styles.metricVal}>
             {cura.status === "finalizada" ? "—" : `${diasRestantes}d`}
           </span>
+        </div>
+        <div className={styles.metric}>
+          <span className={styles.metricIcon}>📦</span>
+          <span className={styles.metricVal}>{lote?.quantidadePecas ?? "—"} pç</span>
         </div>
       </div>
 

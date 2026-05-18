@@ -1,0 +1,383 @@
+/* ── Page header ──────────────────────────────────────────────────────────── */
+.pageHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.pageHeader button {
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+/* ── Layout duas colunas ─────────────────────────────────────────────────── */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.formCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sideCol {
+  /* a sidebar cola no topo ao rolar */
+}
+
+.stickyBox {
+  position: sticky;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Card base ───────────────────────────────────────────────────────────── */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.cardTitle {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--color-border-light);
+  margin-bottom: 18px;
+}
+
+.cardHint {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  margin-top: -10px;
+  margin-bottom: 18px;
+  line-height: 1.5;
+}
+
+/* ── Resumo da receita ───────────────────────────────────────────────────── */
+.receitaResumo {
+  margin-top: 14px;
+  padding: 14px;
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-light);
+}
+
+.receitaBadges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.receitaGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 16px;
+}
+
+.receitaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.receitaItem span {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.receitaItem strong {
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Grid dosagem ────────────────────────────────────────────────────────── */
+.dosagemGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 16px;
+}
+
+/* ── Campo de insumo ─────────────────────────────────────────────────────── */
+.insumoGroup {
+  margin-bottom: 12px;
+}
+
+.insumoLabelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.insumoHint {
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+}
+
+.insumoInputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.insumoInputWrap input {
+  padding-right: 68px;
+}
+
+.insumoDesvio {
+  position: absolute;
+  right: 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* ── Validação ───────────────────────────────────────────────────────────── */
+.inputError {
+  border-color: var(--color-danger) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+.erro {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-danger);
+  margin-top: 4px;
+}
+
+/* ── Comparativo ─────────────────────────────────────────────────────────── */
+.comparativoVazio {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: 24px 0;
+}
+
+/* Banner de conformidade */
+.conformidadeBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+}
+
+.conformidadeIcon {
+  font-size: 1.25rem;
+  line-height: 1;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+.conformidadeLabel {
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.conformidadeDesc {
+  font-size: 0.75rem;
+  margin-top: 2px;
+  opacity: 0.85;
+}
+
+.badgeConforme {
+  background: var(--color-accent-light);
+  color: #065f46;
+}
+
+.badgeLeve {
+  background: var(--color-warning-light);
+  color: #92400e;
+}
+
+.badgeCritico {
+  background: var(--color-danger-light);
+  color: #991b1b;
+}
+
+/* Relações padrão → real */
+.relacoesBox {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding: 14px;
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+}
+
+.relacaoRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.relacaoCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.relacaoLabel {
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.relacaoVal {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.relacaoSeta {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.desvioTag {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tabela de desvios por insumo */
+.tabelaDesvios {
+  border-top: 1px solid var(--color-border-light);
+  padding-top: 14px;
+}
+
+.tabelaDesviosTitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-bottom: 10px;
+}
+
+.desvioRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 7px;
+}
+
+.desvioLabel {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  width: 64px;
+  flex-shrink: 0;
+}
+
+.desvioBar {
+  flex: 1;
+  height: 6px;
+  background: var(--color-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.desvioBarFill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 200ms ease;
+}
+
+.desvioValor {
+  font-size: 0.75rem;
+  font-weight: 700;
+  width: 44px;
+  text-align: right;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Classes de desvio (usadas em vários elementos) ─────────────────────── */
+.desvioOk {
+  color: #065f46;
+  background: var(--color-accent-light);
+}
+
+.desvioLeve {
+  color: #92400e;
+  background: var(--color-warning-light);
+}
+
+.desvioCritico {
+  color: #991b1b;
+  background: var(--color-danger-light);
+}
+
+/* Para a barra (sem background) */
+.desvioBar .desvioOk { background: var(--color-accent); }
+.desvioBar .desvioLeve { background: var(--color-warning); }
+.desvioBar .desvioCritico { background: var(--color-danger); }
+
+/* Para o texto inline do campo (sem background) */
+.insumoDesvio.desvioOk { background: none; }
+.insumoDesvio.desvioLeve { background: none; }
+.insumoDesvio.desvioCritico { background: none; }
+
+/* ── Ações ───────────────────────────────────────────────────────────────── */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.actions .btn {
+  width: 100%;
+  justify-content: center;
+}
+
+/* ── Responsivo ──────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .stickyBox {
+    position: static;
+  }
+
+  .dosagemGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 18px;
+  }
+
+  .receitaGrid {
+    grid-template-columns: 1fr;
+  }
+}

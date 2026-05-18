@@ -1,43 +1,58 @@
-import { Receita } from "@/types";
+import { ReceitaTraco } from "@/types";
 import { gerarId } from "@/utils/formatters";
 
 const CHAVE = "curasense_receitas";
 
-const RECEITAS_INICIAIS: Receita[] = [
+const RECEITAS_INICIAIS: ReceitaTraco[] = [
   {
-    id: "receita-leve",
-    nome: "Cura Leve — Vaso Convencional",
-    tipoPeca: "vaso",
-    tipoConcreto: "convencional",
-    volumeM3: 0.02,
-    objetivoFinal: "Peça decorativa resistente a intempéries",
-    diasCura: 14,
-    aguaBaseMl: 300,
-    vazaoBombaMlSegundo: 5,
+    id: "receita-cuba-colorida",
+    nome: "Cuba Colorida UHPC",
+    tipoPeca: "cuba_colorida",
+    tipoConcreto: "uhpc",
+    massaCimento: 1000,
+    massaAgregado: 800,
+    massaPigmento: 30,
+    massaAditivos: 15,
+    massaAgua: 180,
+    relacaoAguaCimento: 0.18,
+    relacaoMassaAgregado: 1.25,
+    diasCura: 7,
+    ambienteCura: "tanque_submerso",
+    observacoes: "Peça decorativa colorida. Atenção ao pigmento: variação de mais de 2g altera a cor final.",
     criadaEm: new Date().toISOString(),
   },
   {
-    id: "receita-media",
-    nome: "Cura Média — Bancada Armada",
-    tipoPeca: "bancada",
-    tipoConcreto: "armado",
-    volumeM3: 0.08,
-    objetivoFinal: "Bancada estrutural com resistência mínima de 25 MPa",
-    diasCura: 28,
-    aguaBaseMl: 600,
-    vazaoBombaMlSegundo: 8,
+    id: "receita-escalda-pes",
+    nome: "Escalda-Pés Fino UHPC",
+    tipoPeca: "escalda_pes",
+    tipoConcreto: "uhpc",
+    massaCimento: 1200,
+    massaAgregado: 900,
+    massaPigmento: 0,
+    massaAditivos: 20,
+    massaAgua: 200,
+    relacaoAguaCimento: 0.167,
+    relacaoMassaAgregado: 1.333,
+    diasCura: 7,
+    ambienteCura: "tanque_submerso",
+    observacoes: "Peça de parede fina — risco de trinca aumenta com desvio na relação A/C acima de 5%.",
     criadaEm: new Date().toISOString(),
   },
   {
-    id: "receita-intensa",
-    nome: "Cura Intensa — Pilar Alta Resistência",
-    tipoPeca: "pilar",
-    tipoConcreto: "alta_resistencia",
-    volumeM3: 0.2,
-    objetivoFinal: "Elemento estrutural com resistência acima de 50 MPa",
-    diasCura: 28,
-    aguaBaseMl: 1000,
-    vazaoBombaMlSegundo: 12,
+    id: "receita-pia-gourmet",
+    nome: "Pia Gourmet UHPC",
+    tipoPeca: "pia_gourmet",
+    tipoConcreto: "uhpc",
+    massaCimento: 1500,
+    massaAgregado: 1200,
+    massaPigmento: 0,
+    massaAditivos: 25,
+    massaAgua: 240,
+    relacaoAguaCimento: 0.16,
+    relacaoMassaAgregado: 1.25,
+    diasCura: 7,
+    ambienteCura: "tanque_submerso",
+    observacoes: "Peça de grande porte. Manter constância da dosagem entre lotes para uniformidade visual.",
     criadaEm: new Date().toISOString(),
   },
 ];
@@ -46,28 +61,28 @@ function isBrowser(): boolean {
   return typeof window !== "undefined";
 }
 
-export function listarReceitas(): Receita[] {
+export function listarReceitas(): ReceitaTraco[] {
   if (!isBrowser()) return RECEITAS_INICIAIS;
   const raw = localStorage.getItem(CHAVE);
   if (!raw) {
     localStorage.setItem(CHAVE, JSON.stringify(RECEITAS_INICIAIS));
     return RECEITAS_INICIAIS;
   }
-  return JSON.parse(raw) as Receita[];
+  return JSON.parse(raw) as ReceitaTraco[];
 }
 
-export function buscarReceita(id: string): Receita | undefined {
+export function buscarReceita(id: string): ReceitaTraco | undefined {
   return listarReceitas().find((r) => r.id === id);
 }
 
-export function salvarReceita(dados: Omit<Receita, "id" | "criadaEm">): Receita {
+export function salvarReceita(dados: Omit<ReceitaTraco, "id" | "criadaEm">): ReceitaTraco {
   const receitas = listarReceitas();
-  const nova: Receita = { ...dados, id: gerarId(), criadaEm: new Date().toISOString() };
+  const nova: ReceitaTraco = { ...dados, id: gerarId(), criadaEm: new Date().toISOString() };
   localStorage.setItem(CHAVE, JSON.stringify([...receitas, nova]));
   return nova;
 }
 
-export function atualizarReceita(id: string, dados: Partial<Receita>): void {
+export function atualizarReceita(id: string, dados: Partial<ReceitaTraco>): void {
   const receitas = listarReceitas().map((r) => (r.id === id ? { ...r, ...dados } : r));
   localStorage.setItem(CHAVE, JSON.stringify(receitas));
 }

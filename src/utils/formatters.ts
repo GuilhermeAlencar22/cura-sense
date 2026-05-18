@@ -1,4 +1,4 @@
-import { TipoConcreto, TipoPeca, StatusCura } from "@/types";
+import { TipoConcreto, TipoPeca, StatusCura, StatusConformidade } from "@/types";
 
 export function formatarData(isoString: string): string {
   return new Date(isoString).toLocaleDateString("pt-BR", {
@@ -18,9 +18,8 @@ export function formatarDataCurta(isoString: string): string {
   });
 }
 
-export function calcularDiasRestantes(inicioCura: string, diasCura: number): number {
-  const inicio = new Date(inicioCura).getTime();
-  const fim = inicio + diasCura * 24 * 60 * 60 * 1000;
+export function calcularDiasRestantes(previsaoFim: string): number {
+  const fim = new Date(previsaoFim).getTime();
   const restante = Math.ceil((fim - Date.now()) / (24 * 60 * 60 * 1000));
   return Math.max(0, restante);
 }
@@ -38,36 +37,50 @@ export function gerarId(): string {
 
 export function labelTipoConcreto(tipo: TipoConcreto): string {
   const labels: Record<TipoConcreto, string> = {
+    uhpc: "UHPC",
     convencional: "Convencional",
     armado: "Armado",
-    usinado: "Usinado",
-    bombeavel: "Bombeável",
-    protendido: "Protendido",
     alta_resistencia: "Alta Resistência",
-    leve: "Leve",
-    autoadensavel: "Autoadensável",
   };
-  return labels[tipo];
+  return labels[tipo] ?? tipo;
 }
 
 export function labelTipoPeca(tipo: TipoPeca): string {
   const labels: Record<TipoPeca, string> = {
-    pia: "Pia",
-    vaso: "Vaso",
+    cuba_colorida: "Cuba Colorida",
+    escalda_pes: "Escalda-Pés",
+    pia_gourmet: "Pia Gourmet",
     bancada: "Bancada",
-    pilar: "Pilar",
-    laje: "Laje",
+    vaso: "Vaso",
     outro: "Outro",
   };
-  return labels[tipo];
+  return labels[tipo] ?? tipo;
 }
 
 export function labelStatus(status: StatusCura): string {
   const labels: Record<StatusCura, string> = {
-    ativa: "Ativa",
-    pausada: "Pausada",
+    em_cura: "Em Cura",
     finalizada: "Finalizada",
     alerta: "Alerta",
+    cancelada: "Cancelada",
   };
-  return labels[status];
+  return labels[status] ?? status;
+}
+
+export function labelAmbienteCura(ambiente: string): string {
+  const labels: Record<string, string> = {
+    tanque_submerso: "Tanque Submerso",
+    camara_umida: "Câmara Úmida",
+    exposto: "Exposto",
+  };
+  return labels[ambiente] ?? ambiente;
+}
+
+export function labelConformidade(conformidade: StatusConformidade): string {
+  const labels: Record<StatusConformidade, string> = {
+    conforme: "Conforme",
+    desvio_leve: "Desvio Leve",
+    desvio_critico: "Desvio Crítico",
+  };
+  return labels[conformidade] ?? conformidade;
 }

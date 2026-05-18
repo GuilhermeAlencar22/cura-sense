@@ -1,142 +1,388 @@
-.back {
-  margin-bottom: 20px;
+/* ── Page header ──────────────────────────────────────────────────────────── */
+.pageHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
+.pageHeader button {
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+/* ── Layout duas colunas ─────────────────────────────────────────────────── */
 .layout {
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 1fr 360px;
   gap: 24px;
-  align-items: start;
+  align-items: flex-start;
 }
 
-@media (max-width: 900px) {
-  .layout { grid-template-columns: 1fr; }
+.mainCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.formCard {
+.sideCol {
+  /* a sidebar cola no topo */
+}
+
+.stickyBox {
+  position: sticky;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── Card base ───────────────────────────────────────────────────────────── */
+.card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 32px;
+  border-radius: var(--radius-lg);
+  padding: 24px;
   box-shadow: var(--shadow-sm);
 }
 
-.slider {
-  width: 100%;
-  accent-color: var(--color-primary);
-  cursor: pointer;
-  height: 6px;
-  margin-bottom: 4px;
+.cardTitle {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--color-border-light);
+  margin-bottom: 18px;
 }
 
-.sliderLabels {
+/* ── Card 1: Resumo do lote ─────────────────────────────────────────────── */
+.resumoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 20px;
+}
+
+.resumoItem {
   display: flex;
-  justify-content: space-between;
-  font-size: 0.7rem;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.resumoItem span {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   color: var(--color-text-muted);
 }
 
-.formActions {
+.resumoItem strong {
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+}
+
+.resumoItemFull {
+  grid-column: 1 / -1;
+}
+
+/* ── Card 2: Traço e dosagem ─────────────────────────────────────────────── */
+.relacoesRow {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
   gap: 10px;
-  margin-top: 24px;
-  padding-top: 20px;
+  padding: 12px 14px;
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  margin-bottom: 10px;
+}
+
+.relacaoBloco {
+  flex: 1;
+}
+
+.relacaoBlocoLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  margin-bottom: 2px;
+}
+
+.relacaoBlocoVal {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.relacaoSeta {
+  color: var(--color-text-muted);
+  font-size: 0.9375rem;
+  flex-shrink: 0;
+}
+
+.relacaoDesvioTag {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Desvios por insumo */
+.desviosInsumo {
+  margin-top: 18px;
+  padding-top: 16px;
   border-top: 1px solid var(--color-border-light);
 }
 
-/* Prévia */
-.preview {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 24px;
-  box-shadow: var(--shadow-sm);
-  position: sticky;
-  top: 24px;
-}
-
-.previewTitle {
-  font-size: 0.8125rem;
+.desviosTitle {
+  font-size: 0.75rem;
   font-weight: 600;
-  color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-bottom: 16px;
+  color: var(--color-text-muted);
+  margin-bottom: 12px;
 }
 
-.receitaInfo {
+.desvioRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.desvioLabel {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  width: 62px;
+  flex-shrink: 0;
+}
+
+.desvioMassas {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  width: 120px;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.desvioBar {
+  flex: 1;
+  height: 6px;
+  background: var(--color-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.desvioBarFill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 200ms ease;
+  /* cores sobrescritas abaixo */
+}
+
+.desvioValor {
+  font-size: 0.75rem;
+  font-weight: 700;
+  width: 44px;
+  text-align: right;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Card 3: Configuração da cura ────────────────────────────────────────── */
+.curaGrid {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 16px;
-  padding-bottom: 16px;
+  gap: 12px;
+}
+
+.curaItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  padding-bottom: 10px;
   border-bottom: 1px solid var(--color-border-light);
 }
 
-.infoRow {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.8125rem;
+.curaItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.curaItem span {
   color: var(--color-text-secondary);
 }
 
-.calculoBox {
-  background: var(--color-primary-light);
-  border-radius: var(--radius-sm);
-  padding: 16px;
-  margin-bottom: 16px;
+.curaItem strong {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  text-align: right;
 }
 
-.calculoLabel {
-  font-size: 0.75rem;
-  color: var(--color-primary);
-  margin-bottom: 12px;
+.valorSimulado {
+  font-weight: 400 !important;
+  font-style: italic;
+  color: var(--color-text-muted) !important;
+  font-size: 0.8125rem;
+}
+
+/* ── Card 4: Orientação prática ─────────────────────────────────────────── */
+.cardOrientacao {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+  text-align: center;
+}
+
+.orientacaoIcone {
+  font-size: 1.75rem;
+  margin-bottom: 8px;
+}
+
+.orientacaoTexto {
+  font-size: 0.875rem;
+  color: var(--color-primary-dark);
+  line-height: 1.6;
   font-weight: 500;
 }
 
-.calculoGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.calculoItem {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+.orientacaoObs {
+  margin-top: 10px;
   font-size: 0.8125rem;
+  color: var(--color-primary);
+  font-style: italic;
+  line-height: 1.5;
+  padding-top: 10px;
+  border-top: 1px solid rgba(37, 99, 235, 0.2);
 }
 
-.calculoItem span { color: var(--color-primary); }
-
-.calculoItem strong {
-  font-size: 1rem;
-  color: var(--color-primary-dark);
+/* ── Alerta de desvio crítico ────────────────────────────────────────────── */
+.alertaCritico {
+  display: flex;
+  gap: 12px;
+  background: var(--color-danger-light);
+  border: 1.5px solid var(--color-danger);
+  border-radius: var(--radius-md);
+  padding: 16px;
 }
 
-.destaque {
-  font-size: 1.25rem !important;
+.alertaIcone {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 1px;
 }
 
-.objetivo {
-  background: var(--color-bg);
-  border-radius: var(--radius-sm);
-  padding: 12px;
-  border: 1px solid var(--color-border-light);
-}
-
-.objetivoLabel {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+.alertaTitulo {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #991b1b;
   margin-bottom: 4px;
 }
 
-.objetivoText {
+.alertaDesc {
   font-size: 0.8125rem;
-  color: var(--color-text-secondary);
+  color: #7f1d1d;
   line-height: 1.5;
+}
+
+/* ── Cura já existente ───────────────────────────────────────────────────── */
+.curaExistente {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--color-accent-light);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  padding: 16px;
+}
+
+.curaExistenteTexto {
+  font-size: 0.875rem;
+  color: #065f46;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* ── Ações ───────────────────────────────────────────────────────────────── */
+.acoes {
+  display: flex;
+  gap: 10px;
+}
+
+.acoes .btn {
+  flex: 1;
+}
+
+.btnCritico {
+  background: var(--color-danger);
+  color: #fff;
+  flex: 1;
+}
+
+.btnCritico:hover {
+  background: #dc2626;
+}
+
+/* ── Classes de desvio ───────────────────────────────────────────────────── */
+.desvioOk {
+  color: #065f46;
+  background: var(--color-accent-light);
+}
+
+.desvioLeve {
+  color: #92400e;
+  background: var(--color-warning-light);
+}
+
+.desvioCritico {
+  color: #991b1b;
+  background: var(--color-danger-light);
+}
+
+/* Para barras de desvio (sem background nas classes gerais) */
+.desvioBar .desvioOk { background: var(--color-accent); }
+.desvioBar .desvioLeve { background: var(--color-warning); }
+.desvioBar .desvioCritico { background: var(--color-danger); }
+
+/* Para tags inline (sem background) */
+.relacaoDesvioTag.desvioOk,
+.desvioValor.desvioOk { background: var(--color-accent-light); }
+.relacaoDesvioTag.desvioLeve,
+.desvioValor.desvioLeve { background: var(--color-warning-light); }
+.relacaoDesvioTag.desvioCritico,
+.desvioValor.desvioCritico { background: var(--color-danger-light); }
+
+/* ── Responsivo ──────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .stickyBox {
+    position: static;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 18px;
+  }
+
+  .resumoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .relacoesRow {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .desvioMassas {
+    display: none;
+  }
 }

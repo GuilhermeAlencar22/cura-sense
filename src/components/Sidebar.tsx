@@ -7,8 +7,9 @@ import styles from "./Sidebar.module.css";
 
 const navLinks = [
   { href: "/dashboard", label: "Dashboard", icon: "⊞" },
-  { href: "/curas", label: "Curas", icon: "⟳" },
   { href: "/receitas", label: "Receitas", icon: "✦" },
+  { href: "/producao", label: "Produção", icon: "⊕" },
+  { href: "/curas", label: "Curas", icon: "⟳" },
   { href: "/simulador", label: "Simulador", icon: "◉" },
   { href: "/historico", label: "Histórico", icon: "☰" },
 ];
