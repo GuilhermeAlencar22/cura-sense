@@ -1,0 +1,49 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.filtro {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.resumo {
+  display: flex;
+  gap: 24px;
+}
+
+.resumoItem {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.resumoLabel {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.resumoVal {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.tempAlta {
+  color: var(--color-danger) !important;
+  font-weight: 600;
+}
+
+.umidadeBaixa {
+  color: var(--color-warning) !important;
+  font-weight: 600;
+}

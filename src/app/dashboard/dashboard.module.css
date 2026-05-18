@@ -1,0 +1,41 @@
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.tempAlta {
+  color: var(--color-danger) !important;
+  font-weight: 600;
+}
+
+.umidadeBaixa {
+  color: var(--color-warning) !important;
+  font-weight: 600;
+}
+
+.progressMini {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  min-width: 100px;
+}
+
+.progressBarMini {
+  flex: 1;
+  height: 5px;
+  background: var(--color-border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progressFillMini {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  border-radius: 99px;
+}
