@@ -31,7 +31,7 @@ export type ReceitaTraco = {
   relacaoMassaAgregado: number;
   // Cura
   diasCura: number;
-  ambienteCura: "tanque_submerso" | "camara_umida" | "exposto";
+  ambienteCura: "camara_cura" | "camara_umida" | "exposto";
   observacoes: string;
   criadaEm: string;
 };

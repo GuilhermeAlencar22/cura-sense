@@ -13,7 +13,7 @@ type AmbienteCura = ReceitaTraco["ambienteCura"];
 
 const TIPOS_PECA: TipoPeca[] = ["cuba_colorida", "escalda_pes", "pia_gourmet", "bancada", "vaso", "outro"];
 const TIPOS_CONCRETO: TipoConcreto[] = ["uhpc", "convencional", "armado", "alta_resistencia"];
-const AMBIENTES: AmbienteCura[] = ["tanque_submerso", "camara_umida", "exposto"];
+const AMBIENTES: AmbienteCura[] = ["camara_cura", "camara_umida", "exposto"];
 
 type FormState = {
   nome: string;
@@ -39,7 +39,7 @@ const FORM_INICIAL: FormState = {
   massaAditivos: "",
   massaAgua: "",
   diasCura: "7",
-  ambienteCura: "tanque_submerso",
+  ambienteCura: "camara_cura",
   observacoes: "",
 };
 
@@ -172,7 +172,7 @@ export default function NovaReceitaPage() {
                 onChange={(e) => set("diasCura", e.target.value)}
               />
               {erros.diasCura && <span className={styles.erro}>{erros.diasCura}</span>}
-              <span className="form-hint">Padrão UHPC: 7 dias em tanque submerso</span>
+              <span className="form-hint">Padrão UHPC: 7 dias em câmara de cura</span>
             </div>
           </div>
         </section>

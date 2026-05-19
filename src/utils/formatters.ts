@@ -69,7 +69,7 @@ export function labelStatus(status: StatusCura): string {
 
 export function labelAmbienteCura(ambiente: string): string {
   const labels: Record<string, string> = {
-    tanque_submerso: "Tanque Submerso",
+    camara_cura: "Câmara de Cura",
     camara_umida: "Câmara Úmida",
     exposto: "Exposto",
   };
