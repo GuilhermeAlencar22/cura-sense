@@ -9,11 +9,13 @@
 
 ## 👥 Integrantes
 
-| Nome | Matrícula |
-|------|-----------|
-| *(preencher)* | *(preencher)* |
-| *(preencher)* | *(preencher)* |
-| *(preencher)* | *(preencher)* |
+| Nome |
+|------|
+| *Guilherme Alencar* |
+| *Henrique Lobo* |
+| *Joao Victor Nunes* |
+| *Caio Fonseca* |
+| *Rodrigo Leal* |
 
 ---
 
