@@ -327,7 +327,7 @@ function NovoLoteForm() {
                 erro={erros.agregado}
               />
               <InsumoField
-                label="Água (g) *"
+                label="Água (ml) *"
                 value={form.agua}
                 onChange={(v) => set("agua", v)}
                 padrao={receita?.massaAgua}
