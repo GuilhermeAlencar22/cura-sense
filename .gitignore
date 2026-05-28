@@ -43,3 +43,6 @@
 # PlatformIO
 **/.pio/
 **/cmake-build-*/
+
+# Credenciais — nunca subir no GitHub
+esp32-esp8266/src/config.h
