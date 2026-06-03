@@ -29,8 +29,8 @@ export default function CurasPage() {
     }
   }
 
-  const ativas = curas.filter((c) => c.status === "em_cura" || c.status === "alerta");
-  const finalizadas = curas.filter((c) => c.status === "finalizada" || c.status === "cancelada");
+  const ativas = curas.filter((c) => c.status === "em_cura");
+  const finalizadas = curas.filter((c) => c.status === "concluida" || c.status === "interrompida");
 
   return (
     <AppShell>
@@ -113,13 +113,13 @@ function CuraCard({ cura, onExcluir }: { cura: CuraLote; onExcluir: (id: string)
         <div className={styles.metric}>
           <span className={styles.metricIcon}>🌡</span>
           <span className={styles.metricVal}>
-            {cura.temperaturaTanque != null ? `${cura.temperaturaTanque}°C` : "—"}
+            {cura.temperaturaAtual != null ? `${cura.temperaturaAtual}°C` : "—"}
           </span>
         </div>
         <div className={styles.metric}>
           <span className={styles.metricIcon}>⏱</span>
           <span className={styles.metricVal}>
-            {cura.status === "finalizada" ? "—" : `${diasRestantes}d`}
+            {cura.status === "concluida" || cura.status === "interrompida" ? "—" : `${diasRestantes}d`}
           </span>
         </div>
         <div className={styles.metric}>

@@ -468,12 +468,60 @@
 
 .rowAlerta td { background: #fffbeb !important; }
 
-/* ── Classes de desvio ───────────────────────────────────────────────────── */
+/* ── Classes de desvio de traço ─────────────────────────────────────────────*/
 .desvioOk       { color: #065f46; }
 .desvioLeve     { color: #92400e; }
 .desvioCritico  { color: #991b1b; }
 
 .destaqueDanger { color: var(--color-danger); font-weight: 700; }
+
+/* ── Conformidade de telemetria ──────────────────────────────────────────── */
+.tagConforme      { color: #166534; font-weight: 600; font-size: 0.75rem; }
+.tagDesvioLeve    { color: #92400e; font-weight: 600; font-size: 0.75rem; }
+.tagDesvioCritico { color: #991b1b; font-weight: 600; font-size: 0.75rem; }
+.tagSemDados      { color: var(--color-text-muted); font-size: 0.75rem; }
+
+/* ── Estado da bomba ─────────────────────────────────────────────────────── */
+.bombaLigada    { color: #16a34a; font-weight: 700; font-size: 0.875rem; }
+.bombaDesligada { color: var(--color-text-muted); font-size: 0.875rem; }
+
+/* ── Parâmetro ideal nos sensor boxes ────────────────────────────────────── */
+.sensorIdeal {
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  margin-top: 3px;
+  margin-bottom: 2px;
+}
+
+/* ── Regra de irrigação ──────────────────────────────────────────────────── */
+.regraBox {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.regraTitle {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-bottom: 8px;
+}
+
+.regraGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+}
+
+/* ── Origem do acionamento ───────────────────────────────────────────────── */
+.origemAuto   { color: var(--color-primary); font-weight: 600; font-size: 0.8125rem; }
+.origemManual { color: var(--color-text-secondary); font-size: 0.8125rem; }
 
 /* ── Responsivo ──────────────────────────────────────────────────────────── */
 @media (max-width: 600px) {

@@ -272,11 +272,7 @@ function NovaCuraForm() {
                     <strong>{calcularPrevisaoFim(receita.diasCura)}</strong>
                   </div>
                   <div className={styles.curaItem}>
-                    <span>Temperatura inicial (tanque)</span>
-                    <strong className={styles.valorSimulado}>registrado pelo ESP32</strong>
-                  </div>
-                  <div className={styles.curaItem}>
-                    <span>Nível inicial (tanque)</span>
+                    <span>Temperatura e umidade iniciais</span>
                     <strong className={styles.valorSimulado}>registrado pelo ESP32</strong>
                   </div>
                 </div>
@@ -286,7 +282,7 @@ function NovaCuraForm() {
               <section className={`${styles.card} ${styles.cardOrientacao}`}>
                 <p className={styles.orientacaoIcone}>📋</p>
                 <p className={styles.orientacaoTexto}>
-                  Posicione a peça no tanque de cura, confira o nível de água e inicie o acompanhamento.
+                  Posicione a peça na câmara de cura, ligue o ESP32 e inicie o acompanhamento.
                 </p>
                 {receita.observacoes && (
                   <p className={styles.orientacaoObs}>{receita.observacoes}</p>

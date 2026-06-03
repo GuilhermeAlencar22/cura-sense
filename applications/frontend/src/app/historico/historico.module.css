@@ -38,12 +38,9 @@
   color: var(--color-text-primary);
 }
 
-.tempAlta {
-  color: var(--color-danger) !important;
-  font-weight: 600;
-}
+.tagConforme      { color: #166534; font-weight: 600; font-size: 0.8125rem; }
+.tagDesvioLeve    { color: #92400e; font-weight: 600; font-size: 0.8125rem; }
+.tagDesvioCritico { color: #991b1b; font-weight: 600; font-size: 0.8125rem; }
 
-.umidadeBaixa {
-  color: var(--color-warning) !important;
-  font-weight: 600;
-}
+.bombaLigada      { color: #16a34a; font-weight: 600; font-size: 0.8125rem; }
+.bombaDesligada   { color: var(--color-text-muted); font-size: 0.8125rem; }

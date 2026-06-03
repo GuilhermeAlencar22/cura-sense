@@ -7,14 +7,22 @@
   flex-wrap: wrap;
 }
 
-.tempAlta {
-  color: var(--color-danger) !important;
+.tagConforme {
+  color: #166534;
   font-weight: 600;
+  font-size: 0.8125rem;
 }
 
-.umidadeBaixa {
-  color: var(--color-warning) !important;
+.tagDesvioLeve {
+  color: #92400e;
   font-weight: 600;
+  font-size: 0.8125rem;
+}
+
+.tagDesvioCritico {
+  color: #991b1b;
+  font-weight: 600;
+  font-size: 0.8125rem;
 }
 
 .progressMini {

@@ -59,10 +59,10 @@ export function labelTipoPeca(tipo: TipoPeca): string {
 
 export function labelStatus(status: StatusCura): string {
   const labels: Record<StatusCura, string> = {
-    em_cura: "Em Cura",
-    finalizada: "Finalizada",
-    alerta: "Alerta",
-    cancelada: "Cancelada",
+    aguardando:   "Aguardando",
+    em_cura:      "Em Cura",
+    concluida:    "Concluída",
+    interrompida: "Interrompida",
   };
   return labels[status] ?? status;
 }

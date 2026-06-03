@@ -8,7 +8,15 @@ import StatusBadge from "@/components/StatusBadge";
 import { listarCuras, listarCurasAtivas } from "@/services/curasService";
 import { listarLotes } from "@/services/lotesService";
 import { listarReceitas, buscarReceita } from "@/services/receitasService";
-import { calcularDiasRestantes, calcularProgresso, labelTipoPeca } from "@/utils/formatters";
+import {
+  calcularDiasRestantes,
+  calcularProgresso,
+  labelTipoPeca,
+} from "@/utils/formatters";
+import {
+  avaliarLeitura,
+  labelConformidadeTelemetria,
+} from "@/utils/calcularConformidadeTelemetria";
 import { CuraLote } from "@/types";
 import styles from "./dashboard.module.css";
 
@@ -23,9 +31,9 @@ export default function DashboardPage() {
     setTotalReceitas(listarReceitas().length);
   }, []);
 
-  const ativas = curas.filter((c) => c.status === "em_cura" || c.status === "alerta");
-  const finalizadas = curas.filter((c) => c.status === "finalizada");
-  const emAlerta = curas.filter((c) => c.status === "alerta");
+  const ativas    = curas.filter((c) => c.status === "em_cura");
+  const emAlerta  = curas.filter((c) => c.status === "interrompida");
+  const concluidas = curas.filter((c) => c.status === "concluida");
 
   return (
     <AppShell>
@@ -40,11 +48,11 @@ export default function DashboardPage() {
       </div>
 
       <div className="cards-grid">
-        <StatCard label="Lotes em cura" value={ativas.length} icon="⟳" variant="blue" />
-        <StatCard label="Em alerta" value={emAlerta.length} icon="⚠" variant="red" />
-        <StatCard label="Finalizadas" value={finalizadas.length} icon="✓" variant="green" />
-        <StatCard label="Total de lotes" value={totalLotes} icon="⊞" />
-        <StatCard label="Receitas cadastradas" value={totalReceitas} icon="✦" variant="blue" />
+        <StatCard label="Lotes em cura"       value={ativas.length}     icon="⟳" variant="blue" />
+        <StatCard label="Interrompidas"        value={emAlerta.length}   icon="⚠" variant="red"  />
+        <StatCard label="Concluídas"           value={concluidas.length} icon="✓" variant="green" />
+        <StatCard label="Total de lotes"       value={totalLotes}        icon="⊞" />
+        <StatCard label="Receitas cadastradas" value={totalReceitas}     icon="✦" variant="blue" />
       </div>
 
       <h2 className="section-title">Curas ativas</h2>
@@ -53,7 +61,11 @@ export default function DashboardPage() {
           <div className="empty-state">
             <span style={{ fontSize: "2.5rem" }}>⟳</span>
             <p>Nenhuma cura ativa no momento.</p>
-            <Link href="/producao/nova" className="btn btn-primary" style={{ marginTop: 16, display: "inline-flex" }}>
+            <Link
+              href="/producao/nova"
+              className="btn btn-primary"
+              style={{ marginTop: 16, display: "inline-flex" }}
+            >
               Registrar primeiro lote
             </Link>
           </div>
@@ -64,7 +76,8 @@ export default function DashboardPage() {
                 <th>Lote</th>
                 <th>Receita</th>
                 <th>Status</th>
-                <th>Temp. tanque</th>
+                <th>Câmara</th>
+                <th>Conformidade</th>
                 <th>Progresso</th>
                 <th>Dias restantes</th>
                 <th></th>
@@ -73,8 +86,21 @@ export default function DashboardPage() {
             <tbody>
               {ativas.map((cura) => {
                 const receita = buscarReceita(cura.receitaId);
-                const progresso = receita ? calcularProgresso(cura.inicioCura, receita.diasCura) : 0;
+                const progresso = receita
+                  ? calcularProgresso(cura.inicioCura, receita.diasCura)
+                  : 0;
                 const diasRestantes = calcularDiasRestantes(cura.previsaoFim);
+
+                const temLeitura =
+                  cura.temperaturaAtual !== null && cura.umidadeAtual !== null;
+                const conformidade = temLeitura
+                  ? avaliarLeitura(
+                      cura.temperaturaAtual!,
+                      cura.umidadeAtual!,
+                      cura.parametros
+                    )
+                  : null;
+
                 return (
                   <tr key={cura.id}>
                     <td>
@@ -87,21 +113,46 @@ export default function DashboardPage() {
                         ? `${receita.nome} · ${labelTipoPeca(receita.tipoPeca)}`
                         : "—"}
                     </td>
-                    <td><StatusBadge status={cura.status} /></td>
                     <td>
-                      {cura.temperaturaTanque != null ? `${cura.temperaturaTanque}°C` : "—"}
+                      <StatusBadge status={cura.status} />
+                    </td>
+                    <td>
+                      {temLeitura ? (
+                        <span style={{ fontVariantNumeric: "tabular-nums" }}>
+                          {cura.temperaturaAtual}°C · {cura.umidadeAtual}%
+                        </span>
+                      ) : (
+                        <span style={{ color: "var(--color-text-muted)" }}>—</span>
+                      )}
+                    </td>
+                    <td>
+                      {conformidade ? (
+                        <span className={conformidadeCls(conformidade.geral)}>
+                          {labelConformidadeTelemetria(conformidade.geral)}
+                        </span>
+                      ) : (
+                        <span style={{ color: "var(--color-text-muted)" }}>
+                          Sem dados
+                        </span>
+                      )}
                     </td>
                     <td>
                       <div className={styles.progressMini}>
                         <div className={styles.progressBarMini}>
-                          <div className={styles.progressFillMini} style={{ width: `${progresso}%` }} />
+                          <div
+                            className={styles.progressFillMini}
+                            style={{ width: `${progresso}%` }}
+                          />
                         </div>
                         <span>{progresso}%</span>
                       </div>
                     </td>
                     <td>{diasRestantes} dias</td>
                     <td>
-                      <Link href={`/curas/${cura.id}`} className="btn btn-secondary btn-sm">
+                      <Link
+                        href={`/curas/${cura.id}`}
+                        className="btn btn-secondary btn-sm"
+                      >
                         Ver
                       </Link>
                     </td>
@@ -114,4 +165,11 @@ export default function DashboardPage() {
       </div>
     </AppShell>
   );
+}
+
+function conformidadeCls(s: string): string {
+  if (s === "conforme")      return styles.tagConforme;
+  if (s === "desvio_leve")   return styles.tagDesvioLeve;
+  if (s === "desvio_critico") return styles.tagDesvioCritico;
+  return "";
 }

@@ -73,11 +73,11 @@ export default function ReceitasPage() {
               <div className={styles.params}>
                 <div className={styles.param}>
                   <span className={styles.paramLabel}>A/C</span>
-                  <span className={styles.paramValue}>{receita.relacaoAguaCimento.toFixed(3)}</span>
+                  <span className={styles.paramValue}>{(receita.relacaoAguaCimento ?? 0).toFixed(3)}</span>
                 </div>
                 <div className={styles.param}>
                   <span className={styles.paramLabel}>Cim./Agr.</span>
-                  <span className={styles.paramValue}>{receita.relacaoMassaAgregado.toFixed(3)}</span>
+                  <span className={styles.paramValue}>{(receita.relacaoMassaAgregado ?? 0).toFixed(3)}</span>
                 </div>
                 <div className={styles.param}>
                   <span className={styles.paramLabel}>Cura</span>

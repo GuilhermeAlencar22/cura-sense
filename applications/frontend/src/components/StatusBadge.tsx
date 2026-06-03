@@ -1,10 +1,10 @@
 import { StatusCura } from "@/types";
 
 const config: Record<StatusCura, { label: string; cls: string }> = {
-  em_cura: { label: "Em Cura", cls: "badge badge-blue" },
-  finalizada: { label: "Finalizada", cls: "badge badge-green" },
-  alerta: { label: "Alerta", cls: "badge badge-red" },
-  cancelada: { label: "Cancelada", cls: "badge badge-yellow" },
+  aguardando:   { label: "Aguardando",   cls: "badge badge-yellow" },
+  em_cura:      { label: "Em Cura",      cls: "badge badge-blue"   },
+  concluida:    { label: "Concluída",    cls: "badge badge-green"  },
+  interrompida: { label: "Interrompida", cls: "badge badge-red"    },
 };
 
 export default function StatusBadge({ status }: { status: StatusCura }) {

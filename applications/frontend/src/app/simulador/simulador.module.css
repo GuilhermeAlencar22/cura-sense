@@ -224,3 +224,93 @@
   border-radius: var(--radius-sm);
   font-weight: 500;
 }
+
+/* Parâmetros ideais */
+.parametrosBox {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+}
+
+.parametrosTitle {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  margin-bottom: 10px;
+}
+
+.parametrosGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 16px;
+}
+
+.parametroItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.8125rem;
+}
+
+.parametroItem span { color: var(--color-text-muted); }
+.parametroItem strong { color: var(--color-text-primary); font-weight: 600; }
+
+/* Conformidade em tempo real */
+.conformidadeBox {
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1.5px solid transparent;
+}
+
+.conformidade {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.desvioLeve {
+  background: #fffbeb;
+  border-color: #fcd34d;
+}
+
+.desvioCritico {
+  background: #fef2f2;
+  border-color: #fca5a5;
+}
+
+.conformidadeGeral {
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+
+.conforme .conformidadeGeral  { color: #166534; }
+.desvioLeve .conformidadeGeral { color: #92400e; }
+.desvioCritico .conformidadeGeral { color: #991b1b; }
+
+.conformidadeDetalhe {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  text-align: right;
+}
+
+/* Estado da bomba */
+.bombaLigada { color: #16a34a !important; }
+.bombaDesligada { color: var(--color-text-muted) !important; }
+
+/* Feedback irrigação */
+.feedbackIrrigacao {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 6px;
+}
+
+.btn-full { width: 100%; }
