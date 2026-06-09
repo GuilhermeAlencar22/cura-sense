@@ -81,6 +81,47 @@
 
 .alertaBannerWarn .alertaDesc { color: #78350f; }
 
+/* Painel de demonstração — aparece mesmo sem alerta */
+.painelDemo {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #eff6ff;
+  border: 1.5px solid #3b82f6;
+  border-radius: var(--radius-md);
+  font-size: 1.25rem;
+}
+
+.painelDemoTitulo {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1d4ed8;
+  margin-bottom: 4px;
+}
+
+.painelDemoDesc {
+  font-size: 0.8125rem;
+  color: #1e40af;
+  line-height: 1.5;
+}
+
+.alertaClicks {
+  margin-top: 8px;
+  font-size: 0.875rem;
+  color: #78350f;
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  border-radius: 6px;
+  padding: 8px 12px;
+  line-height: 1.5;
+}
+
+.alertaClicks strong {
+  font-size: 1.125rem;
+  color: #92400e;
+}
+
 /* ── Card 1: Status da Cura ─────────────────────────────────────────────── */
 .statusCard {
   background: var(--color-surface);

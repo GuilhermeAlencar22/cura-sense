@@ -91,17 +91,27 @@ export default function DetalheCuraPage() {
   const progresso     = receita ? calcularProgresso(cura.inicioCura, receita.diasCura) : 0;
   const ativa         = cura.status === "em_cura";
 
-  const temLeitura = cura.temperaturaAtual !== null && cura.umidadeAtual !== null;
-  const conformidade = temLeitura
-    ? avaliarLeitura(cura.temperaturaAtual!, cura.umidadeAtual!, cura.parametros)
+  // Usa leitura ao vivo do MQTT se disponível, senão cai para o localStorage
+  const leituraViva = telemetria.ultimaLeitura;
+  const tempExibida = leituraViva?.temperatura ?? cura.temperaturaAtual;
+  const umidExibida = leituraViva?.umidade     ?? cura.umidadeAtual;
+  const temLeitura  = tempExibida !== null && umidExibida !== null;
+
+  const conformidade = temLeitura && tempExibida !== null && umidExibida !== null
+    ? avaliarLeitura(tempExibida, umidExibida, cura.parametros)
     : null;
 
-  const alertaTemp =
-    conformidade?.temperatura === "desvio_critico" ||
-    conformidade?.temperatura === "desvio_leve";
-  const alertaUmidade =
-    conformidade?.umidade === "desvio_critico" ||
-    conformidade?.umidade === "desvio_leve";
+  const alertaTemp    = conformidade?.temperatura !== "conforme" && conformidade !== null;
+  const alertaUmidade = conformidade?.umidade     !== "conforme" && conformidade !== null;
+
+  // Cálculo de clicks — aparece sempre que umidade está abaixo do ideal
+  const mlPorAcionamento = cura.parametros.regraIrrigacao.mlPorAcionamento;
+  const umidadeAlvo      = cura.parametros.umidadeIdealMin;
+  const desvioUmidade    = temLeitura && (umidExibida ?? 0) < umidadeAlvo;
+  const mlNecessarios    = desvioUmidade
+    ? Math.max(mlPorAcionamento, Math.ceil((umidadeAlvo - (umidExibida ?? 0)) * 2))
+    : mlPorAcionamento;
+  const clicksNecessarios = Math.ceil(mlNecessarios / mlPorAcionamento);
 
   // Volume total irrigado
   const volumeTotal = cura.historicoIrrigacao.reduce(
@@ -188,12 +198,27 @@ export default function DetalheCuraPage() {
               <div>
                 <p className={styles.alertaTitulo}>Umidade fora da faixa ideal</p>
                 <p className={styles.alertaDesc}>
-                  {cura.umidadeAtual}% detectados — faixa ideal:{" "}
+                  {umidExibida}% detectados — faixa ideal:{" "}
                   {cura.parametros.umidadeIdealMin}–
                   {cura.parametros.umidadeIdealMax}%.
-                  {cura.umidadeAtual !== null &&
-                    cura.umidadeAtual < cura.parametros.regraIrrigacao.umidadeMinima &&
-                    " Irrigação automática pode ser acionada."}
+                </p>
+                <p className={styles.alertaClicks}>
+                  Pressione o botão físico da bomba{" "}
+                  <strong>{clicksNecessarios}×</strong> para adicionar ~{mlNecessarios} ml e normalizar a umidade.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Painel de irrigação — aparece sempre que há leitura, mesmo sem alerta */}
+          {ativa && temLeitura && !alertaUmidade && (
+            <div className={styles.painelDemo}>
+              <span>💧</span>
+              <div>
+                <p className={styles.painelDemoTitulo}>Câmara em condições normais</p>
+                <p className={styles.painelDemoDesc}>
+                  Umidade: <strong>{umidExibida}%</strong> · Temp: <strong>{tempExibida}°C</strong>
+                  {" "}— Clique <strong>{clicksNecessarios}×</strong> no botão da bomba para adicionar ~{mlNecessarios} ml.
                 </p>
               </div>
             </div>
@@ -278,9 +303,7 @@ export default function DetalheCuraPage() {
               <div>
                 <p className={styles.sensorLabel}>Temperatura</p>
                 <p className={`${styles.sensorVal} ${alertaTemp ? styles.sensorValDanger : ""}`}>
-                  {cura.temperaturaAtual !== null
-                    ? `${cura.temperaturaAtual}°C`
-                    : "—"}
+                  {tempExibida !== null ? `${tempExibida}°C` : "—"}
                 </p>
                 <p className={styles.sensorIdeal}>
                   Ideal: {cura.parametros.temperaturaIdealMin}–
@@ -300,7 +323,7 @@ export default function DetalheCuraPage() {
               <div>
                 <p className={styles.sensorLabel}>Umidade</p>
                 <p className={`${styles.sensorVal} ${alertaUmidade ? styles.sensorValWarn : ""}`}>
-                  {cura.umidadeAtual !== null ? `${cura.umidadeAtual}%` : "—"}
+                  {umidExibida !== null ? `${umidExibida}%` : "—"}
                 </p>
                 <p className={styles.sensorIdeal}>
                   Ideal: {cura.parametros.umidadeIdealMin}–
@@ -374,45 +397,34 @@ export default function DetalheCuraPage() {
           {ativa && (
             <div className={styles.simBtns}>
               <p className={styles.simTitulo}>
-                Controle do ESP32
+                Controle da Bomba
                 <span style={{
                   marginLeft: 8,
                   fontSize: "0.75rem",
-                  color: telemetria.esp32Online ? "var(--color-green)" : "var(--color-text-muted)",
+                  color: telemetria.esp32Online ? "#16a34a" : "#f59e0b",
+                  fontWeight: 600,
                 }}>
-                  {telemetria.esp32Online ? "● Online" : "○ Aguardando ESP32"}
+                  {telemetria.esp32Online ? "● ESP32 Online" : "◉ Conectando..."}
                 </span>
               </p>
               <div className={styles.simGrid}>
                 <button
                   className="btn btn-success btn-sm"
-                  disabled={!telemetria.esp32Online}
                   onClick={() => telemetria.publicarComandoBomba({
                     acao: "ligar",
                     duracaoSegundos: cura.parametros.regraIrrigacao.duracaoSegundos,
                   })}
                 >
-                  ⚙ Irrigar agora
+                  💧 Acionar bomba
                 </button>
                 <button
                   className="btn btn-secondary btn-sm"
-                  disabled={!telemetria.esp32Online}
                   onClick={() => telemetria.publicarComandoBomba({ acao: "desligar" })}
                 >
                   ⏹ Parar bomba
                 </button>
                 <button
                   className="btn btn-secondary btn-sm"
-                  disabled={!telemetria.esp32Online}
-                  onClick={() => telemetria.publicarModo(
-                    telemetria.modoControle === "automatico" ? "manual" : "automatico"
-                  )}
-                >
-                  {telemetria.modoControle === "automatico" ? "Mudar para manual" : "Mudar para automático"}
-                </button>
-                <button
-                  className="btn btn-secondary btn-sm"
-                  disabled={!telemetria.esp32Online}
                   onClick={() => telemetria.publicarConfig(cura.parametros)}
                 >
                   Enviar config ao ESP32

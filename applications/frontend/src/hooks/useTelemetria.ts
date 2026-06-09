@@ -148,7 +148,15 @@ export function useTelemetria(curaId: string | null): TelemetriaAtiva & {
     (parametros: ParametrosCura) => {
       if (!curaId) return;
       const client = getMqttClient();
-      client.publish(MQTT_TOPICS.config(curaId), JSON.stringify({ parametros }));
+      const payload = {
+        umidadeMinima: parametros.regraIrrigacao.umidadeMinima,
+        duracaoSegundos: parametros.regraIrrigacao.duracaoSegundos,
+        tempMin: parametros.temperaturaIdealMin,
+        tempMax: parametros.temperaturaIdealMax,
+        umidMin: parametros.umidadeIdealMin,
+        umidMax: parametros.umidadeIdealMax,
+      };
+      client.publish(MQTT_TOPICS.config(curaId), JSON.stringify(payload));
     },
     [curaId]
   );
