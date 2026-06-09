@@ -8,11 +8,10 @@ import {
   buscarCura,
   atualizarCura,
   finalizarCura,
-  registrarLeitura,
-  registrarIrrigacao,
 } from "@/services/curasService";
 import { buscarLote } from "@/services/lotesService";
 import { buscarReceita } from "@/services/receitasService";
+import { useTelemetria } from "@/hooks/useTelemetria";
 import {
   calcularDiasRestantes,
   calcularProgresso,
@@ -57,9 +56,17 @@ export default function DetalheCuraPage() {
   const router = useRouter();
   const [cura, setCura] = useState<CuraLote | null>(null);
 
+  const telemetria = useTelemetria(id ?? null);
+
   function recarregar() {
     setCura(buscarCura(id) ?? null);
   }
+
+  // Recarrega do localStorage sempre que chegar uma leitura real do ESP32
+  useEffect(() => {
+    if (telemetria.ultimaLeitura) recarregar();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [telemetria.ultimaLeitura]);
 
   useEffect(() => {
     recarregar();
@@ -101,54 +108,6 @@ export default function DetalheCuraPage() {
     (acc, e) => acc + e.volumeEstimadoMl,
     0
   );
-
-  // ── Simulação de leituras ────────────────────────────────────────────────────
-
-  function simularLeituraNormal() {
-    const p = cura!.parametros;
-    const temp = (p.temperaturaIdealMin + p.temperaturaIdealMax) / 2;
-    const umid = (p.umidadeIdealMin + p.umidadeIdealMax) / 2;
-    registrarLeitura(cura!.id, {
-      temperatura: temp,
-      umidade: umid,
-      estadoBomba: "desligada",
-    });
-    atualizarCura(cura!.id, { status: "em_cura" });
-    recarregar();
-  }
-
-  function simularTempAlta() {
-    registrarLeitura(cura!.id, {
-      temperatura: cura!.parametros.temperaturaIdealMax + 5,
-      umidade: cura!.umidadeAtual ?? cura!.parametros.umidadeIdealMin,
-      estadoBomba: cura!.estadoBomba,
-    });
-    recarregar();
-  }
-
-  function simularUmidadeBaixa() {
-    registrarLeitura(cura!.id, {
-      temperatura: cura!.temperaturaAtual ?? cura!.parametros.temperaturaIdealMin,
-      umidade: cura!.parametros.umidadeIdealMin - 10,
-      estadoBomba: cura!.estadoBomba,
-    });
-    recarregar();
-  }
-
-  function simularIrrigacao() {
-    const regra = cura!.parametros.regraIrrigacao;
-    registrarLeitura(cura!.id, {
-      temperatura: cura!.temperaturaAtual ?? cura!.parametros.temperaturaIdealMin,
-      umidade: cura!.umidadeAtual ?? cura!.parametros.umidadeIdealMin,
-      estadoBomba: "ligada",
-    });
-    registrarIrrigacao(cura!.id, {
-      duracaoSegundos: regra.duracaoSegundos,
-      volumeEstimadoMl: regra.mlPorAcionamento,
-      origem: "manual",
-    });
-    recarregar();
-  }
 
   function handleFinalizar() {
     if (confirm("Finalizar esta cura? O lote será marcado como concluído.")) {
@@ -233,7 +192,7 @@ export default function DetalheCuraPage() {
                   {cura.parametros.umidadeIdealMin}–
                   {cura.parametros.umidadeIdealMax}%.
                   {cura.umidadeAtual !== null &&
-                    cura.umidadeAtual < cura.parametros.umidadeMinima &&
+                    cura.umidadeAtual < cura.parametros.regraIrrigacao.umidadeMinima &&
                     " Irrigação automática pode ser acionada."}
                 </p>
               </div>
@@ -411,34 +370,52 @@ export default function DetalheCuraPage() {
             </div>
           </div>
 
-          {/* Simulação */}
+          {/* Controle MQTT + indicador de conexão */}
           {ativa && (
             <div className={styles.simBtns}>
-              <p className={styles.simTitulo}>Simulação de leituras</p>
+              <p className={styles.simTitulo}>
+                Controle do ESP32
+                <span style={{
+                  marginLeft: 8,
+                  fontSize: "0.75rem",
+                  color: telemetria.esp32Online ? "var(--color-green)" : "var(--color-text-muted)",
+                }}>
+                  {telemetria.esp32Online ? "● Online" : "○ Aguardando ESP32"}
+                </span>
+              </p>
               <div className={styles.simGrid}>
                 <button
-                  className="btn btn-secondary btn-sm"
-                  onClick={simularLeituraNormal}
-                >
-                  ◎ Leitura normal
-                </button>
-                <button
-                  className="btn btn-warning btn-sm"
-                  onClick={simularTempAlta}
-                >
-                  🌡 Temperatura alta
-                </button>
-                <button
-                  className="btn btn-warning btn-sm"
-                  onClick={simularUmidadeBaixa}
-                >
-                  💧 Umidade baixa
-                </button>
-                <button
                   className="btn btn-success btn-sm"
-                  onClick={simularIrrigacao}
+                  disabled={!telemetria.esp32Online}
+                  onClick={() => telemetria.publicarComandoBomba({
+                    acao: "ligar",
+                    duracaoSegundos: cura.parametros.regraIrrigacao.duracaoSegundos,
+                  })}
                 >
-                  ⚙ Simular irrigação
+                  ⚙ Irrigar agora
+                </button>
+                <button
+                  className="btn btn-secondary btn-sm"
+                  disabled={!telemetria.esp32Online}
+                  onClick={() => telemetria.publicarComandoBomba({ acao: "desligar" })}
+                >
+                  ⏹ Parar bomba
+                </button>
+                <button
+                  className="btn btn-secondary btn-sm"
+                  disabled={!telemetria.esp32Online}
+                  onClick={() => telemetria.publicarModo(
+                    telemetria.modoControle === "automatico" ? "manual" : "automatico"
+                  )}
+                >
+                  {telemetria.modoControle === "automatico" ? "Mudar para manual" : "Mudar para automático"}
+                </button>
+                <button
+                  className="btn btn-secondary btn-sm"
+                  disabled={!telemetria.esp32Online}
+                  onClick={() => telemetria.publicarConfig(cura.parametros)}
+                >
+                  Enviar config ao ESP32
                 </button>
               </div>
             </div>
