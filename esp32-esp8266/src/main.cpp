@@ -30,6 +30,11 @@ static float tempMinLocal = TEMP_MIN;
 static float tempMaxLocal = TEMP_MAX;
 static float umidMinLocal = UMID_MIN;
 
+// LED pisca no loop — sem usar delay()
+static bool  ledAlerta       = false;
+static unsigned long ultimoPiscada = 0;
+static bool  ledEstado        = false;
+
 DHT dht(DHT_PIN, DHT_TYPE);
 WiFiClient wifiClient;
 PubSubClient mqtt(wifiClient);
@@ -53,12 +58,29 @@ static bool rbPop(Leitura& out) {
   return true;
 }
 
-// ─── LED de alerta ────────────────────────────────────────────────────────────
-static bool ledAlerta = false;
+// ─── LED de alerta com piscar sem delay ──────────────────────────────────────
+static bool  ledAlerta    = false;
+static bool  ledEstado    = false;
+static unsigned long ultimoPiscada = 0;
 
 static void atualizarLedAlerta(float temp, float umid) {
   ledAlerta = (temp < tempMinLocal || temp > tempMaxLocal || umid < umidMinLocal);
-  digitalWrite(LED_ALERTA_PIN, ledAlerta ? HIGH : LOW);
+  if (!ledAlerta) {
+    digitalWrite(LED_ALERTA_PIN, LOW);
+    ledEstado = false;
+  }
+}
+
+// Chamado a cada iteração do loop — pisca rápido durante bomba, lento em alerta
+static void loopLed() {
+  if (!ledAlerta) return;
+  unsigned long agora    = millis();
+  unsigned long intervalo = bombaLigada ? 150 : 500;
+  if (agora - ultimoPiscada >= intervalo) {
+    ultimoPiscada = agora;
+    ledEstado     = !ledEstado;
+    digitalWrite(LED_ALERTA_PIN, ledEstado ? HIGH : LOW);
+  }
 }
 
 // ─── Publicação MQTT ──────────────────────────────────────────────────────────
@@ -203,15 +225,14 @@ void setup() {
 
   pinMode(BOMBA_PIN,      OUTPUT); digitalWrite(BOMBA_PIN,      LOW);
   pinMode(LED_ALERTA_PIN, OUTPUT); digitalWrite(LED_ALERTA_PIN, LOW);
-  pinMode(BOTAO_PIN,      INPUT_PULLUP);  // botão físico — pressionar = GND
 
   dht.begin();
 
   Serial.println("================================");
   Serial.println("   CuraSense Firmware v0.3");
   Serial.println("================================");
-  Serial.printf("  DHT_PIN=%d  BOMBA_PIN=%d  LED_PIN=%d  BOTAO_PIN=%d\n",
-                DHT_PIN, BOMBA_PIN, LED_ALERTA_PIN, BOTAO_PIN);
+  Serial.printf("  DHT_PIN=%d  BOMBA_PIN=%d  LED_PIN=%d\n",
+                DHT_PIN, BOMBA_PIN, LED_ALERTA_PIN);
   Serial.printf("  Alerta quando umidade < %.0f%%\n", umidMinLocal);
   Serial.println("================================");
 
@@ -231,12 +252,7 @@ void loop() {
   uptimeSegundos = millis() / 1000UL;
   unsigned long agora = millis();
 
-  // ── Botão físico — aciona bomba sempre, sem checar alerta ─────────────────
-  if (digitalRead(BOTAO_PIN) == LOW && (agora - ultimoBotao) > 500) {
-    ultimoBotao = agora;
-    Serial.println("[BOTAO] Pressionado — acionando bomba");
-    acionarBomba(duracaoBombaLocal, "botao_fisico");
-  }
+  loopLed();
 
   // ── Leitura DHT11 ─────────────────────────────────────────────────────────
   if (agora - ultimaLeitura >= LEITURA_INTERVALO) {
